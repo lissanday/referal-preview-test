@@ -7,17 +7,17 @@ const robotsMode = ["allow", "meta-only", "facebook-block"].includes(process.env
     : "block";
 const defaultCampaignId = "preview-test-123";
 const restrictedPaths = [
-    "/*/s5stats/",
-    "/*/casino/",
-    "/*/all-events/",
-    "/*/results/",
-    "/*/betslip/",
-    "/*/3hrs/",
-    "/*/3std/",
-    "/*/3saat/",
-    "/*/48hrs/",
-    "/*/48std/",
-    "/*/48saat/"
+    "Disallow: /*/s5stats/",
+    "Disallow: /*/casino/",
+    "Disallow: /*/all-events/",
+    "Disallow: /*/results/",
+    "Disallow: /*/betslip/",
+    "Disallow: /*/3hrs/",
+    "Disallow: /*/3std/",
+    "Disallow: /*/3saat/",
+    "Disallow: /*/48hrs/",
+    "Disallow: /*/48std/",
+    "Disallow: /*/48saat/"
 ];
 const imagePath = "/invite_friend.svg";
 
@@ -103,7 +103,7 @@ const server = createServer((request, response) => {
             robotsMode === "allow"
                 ? `User-agent: *\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
                 : robotsMode === "meta-only"
-                  ? `User-agent: facebookexternalhit\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: meta-externalfetcher\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: *\nDisallow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
+                  ? `User-agent: facebookexternalhit\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: meta-externalfetcher\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: meta-externalagent\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: *\nDisallow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
                   : robotsMode === "facebook-block"
                     ? `User-agent: facebookexternalhit\nDisallow: /\n\nUser-agent: *\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
                     : `User-agent: *\nDisallow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`;
