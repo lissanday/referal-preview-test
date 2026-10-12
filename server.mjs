@@ -2,8 +2,21 @@ import {createServer} from "node:http";
 import {URL} from "node:url";
 
 const port = Number(process.env.PORT || 4173);
-const robotsMode = process.env.ROBOTS_MODE === "allow" ? "allow" : "block";
+const robotsMode = ["allow", "meta-only"].includes(process.env.ROBOTS_MODE) ? process.env.ROBOTS_MODE : "block";
 const defaultCampaignId = "preview-test-123";
+const restrictedPaths = [
+    "/*/s5stats/",
+    "/*/casino/",
+    "/*/all-events/",
+    "/*/results/",
+    "/*/betslip/",
+    "/*/3hrs/",
+    "/*/3std/",
+    "/*/3saat/",
+    "/*/48hrs/",
+    "/*/48std/",
+    "/*/48saat/"
+];
 const imagePath = "/invite_friend.svg";
 
 const isValidCampaignId = campaignId => typeof campaignId === "string" && /^[A-Za-z0-9_-]+$/.test(campaignId);
@@ -83,8 +96,14 @@ const server = createServer((request, response) => {
     console.info(`${new Date().toISOString()} ${request.method} ${requestUrl.pathname}${requestUrl.search} ua=${request.headers["user-agent"] || "-"}`);
 
     if (requestUrl.pathname === "/robots.txt") {
-        const referralRule = robotsMode === "allow" ? "Allow: /v1/tpapi/ctfes/redirect" : "Disallow: /v1/tpapi/ctfes/redirect";
-        send(response, 200, `User-agent: *\n${referralRule}\nAllow: /\n`, {"Content-Type": "text/plain; charset=utf-8"});
+        const restrictedRules = restrictedPaths.join("\n");
+        const robotsBody =
+            robotsMode === "allow"
+                ? `User-agent: *\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
+                : robotsMode === "meta-only"
+                  ? `User-agent: facebookexternalhit\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: meta-externalfetcher\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: *\nDisallow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
+                  : `User-agent: *\nDisallow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`;
+        send(response, 200, robotsBody, {"Content-Type": "text/plain; charset=utf-8"});
         return;
     }
 
