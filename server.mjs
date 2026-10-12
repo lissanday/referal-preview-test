@@ -2,7 +2,9 @@ import {createServer} from "node:http";
 import {URL} from "node:url";
 
 const port = Number(process.env.PORT || 4173);
-const robotsMode = ["allow", "meta-only"].includes(process.env.ROBOTS_MODE) ? process.env.ROBOTS_MODE : "block";
+const robotsMode = ["allow", "meta-only", "facebook-block"].includes(process.env.ROBOTS_MODE)
+    ? process.env.ROBOTS_MODE
+    : "block";
 const defaultCampaignId = "preview-test-123";
 const restrictedPaths = [
     "/*/s5stats/",
@@ -102,7 +104,9 @@ const server = createServer((request, response) => {
                 ? `User-agent: *\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
                 : robotsMode === "meta-only"
                   ? `User-agent: facebookexternalhit\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: meta-externalfetcher\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: *\nDisallow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
-                  : `User-agent: *\nDisallow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`;
+                  : robotsMode === "facebook-block"
+                    ? `User-agent: facebookexternalhit\nDisallow: /\n\nUser-agent: *\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
+                    : `User-agent: *\nDisallow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`;
         send(response, 200, robotsBody, {"Content-Type": "text/plain; charset=utf-8"});
         return;
     }
