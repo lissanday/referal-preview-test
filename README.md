@@ -40,8 +40,15 @@ Expose this demo through an approved public tunnel. Do not expose the production
 
 ```bash
 ROBOTS_MODE=block npm start
+ROBOTS_MODE=meta-only npm start
 ROBOTS_MODE=allow npm start
 ```
+
+Modes:
+
+- `block` disallows the referral redirect for every crawler.
+- `meta-only` allows `facebookexternalhit` and `meta-externalfetcher` to fetch only the referral redirect, while preserving the other restrictions for those bots and blocking the redirect for all other crawlers.
+- `allow` allows every crawler to fetch the referral redirect.
 
 Submit each public URL to Meta Sharing Debugger. Use a new URL or query value for each run because Meta caches previews. Compare:
 
