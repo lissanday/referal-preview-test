@@ -40,7 +40,7 @@ const renderRegistration = (requestUrl, response) => {
 
     const canonicalUrl = new URL(`/en/registration/step1?campaignId=${encodeURIComponent(campaignId)}`, requestUrl);
     const imageUrl = new URL(imagePath, requestUrl);
-    const title = "Referral preview test";
+    const title = "Referral preview test #2";
     const description = "This page confirms that server-rendered referral metadata is available.";
 
     sendHtml(
