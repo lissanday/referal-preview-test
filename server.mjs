@@ -103,7 +103,7 @@ const server = createServer((request, response) => {
             robotsMode === "allow"
                 ? `User-agent: *\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
                 : robotsMode === "meta-only"
-                  ? `User-agent: facebookexternalhit\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: meta-externalfetcher\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: meta-externalagent\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: *\nDisallow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
+                  ? `User-agent: facebookexternalhit\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\n\nUser-agent: *\nDisallow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
                   : robotsMode === "facebook-block"
                     ? `User-agent: facebookexternalhit\nDisallow: /\n\nUser-agent: *\nAllow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`
                     : `User-agent: *\nDisallow: /v1/tpapi/ctfes/redirect\n${restrictedRules}\nAllow: /\n`;
